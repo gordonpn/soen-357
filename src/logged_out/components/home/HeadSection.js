@@ -97,6 +97,9 @@ const styles = (theme) => ({
   waveBorder: {
     paddingTop: theme.spacing(4),
   },
+  noDecoration: {
+    textDecoration: 'none !important',
+  },
 });
 
 function HeadSection(props) {
@@ -139,9 +142,8 @@ function HeadSection(props) {
                             fullWidth
                             className={classes.extraLargeButton}
                             classes={{ label: classes.extraLargeButtonLabel }}
-                            href="https://github.com/gordonpn/soen-357"
                           >
-                            Find me parking!
+                            Find parking!
                           </Button>
                         </Link>
                       </div>

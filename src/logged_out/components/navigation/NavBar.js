@@ -40,8 +40,6 @@ const styles = (theme) => ({
 function NavBar(props) {
   const {
     classes,
-    openRegisterDialog,
-    openLoginDialog,
     handleMobileDrawerOpen,
     handleMobileDrawerClose,
     mobileDrawerOpen,
