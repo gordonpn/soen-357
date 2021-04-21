@@ -1,12 +1,12 @@
-import React, { memo, useCallback, useState, useEffect, Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import { withStyles } from '@material-ui/core';
-import Routing from './Routing';
-import NavBar from './navigation/NavBar';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React, { Fragment, memo, useCallback, useEffect, useState } from 'react';
 import ConsecutiveSnackbarMessages from '../../shared/components/ConsecutiveSnackbarMessages';
 import smoothScrollTop from '../../shared/functions/smoothScrollTop';
 import persons from '../dummy_data/persons';
+import NavBar from './navigation/NavBar';
+import Routing from './Routing';
 import LazyLoadAddBalanceDialog from './subscription/LazyLoadAddBalanceDialog';
 
 const styles = (theme) => ({
@@ -221,7 +221,7 @@ function Main(props) {
 
   const selectDashboard = useCallback(() => {
     smoothScrollTop();
-    document.title = 'WaVer - Dashboard';
+    document.title = 'Dashboard';
     setSelectedTab('Dashboard');
     if (!hasFetchedCardChart) {
       setHasFetchedCardChart(true);
@@ -233,7 +233,7 @@ function Main(props) {
 
   const selectPosts = useCallback(() => {
     smoothScrollTop();
-    document.title = 'WaVer - Posts';
+    document.title = 'Posts';
     setSelectedTab('Posts');
     if (!hasFetchedEmojiTextArea) {
       setHasFetchedEmojiTextArea(true);
@@ -277,7 +277,7 @@ function Main(props) {
 
   const selectSubscription = useCallback(() => {
     smoothScrollTop();
-    document.title = 'WaVer - Subscription';
+    document.title = 'Subscription';
     setSelectedTab('Subscription');
   }, [setSelectedTab]);
 

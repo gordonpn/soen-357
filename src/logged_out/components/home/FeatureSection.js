@@ -1,15 +1,9 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Grid, Typography, isWidthUp, withWidth } from '@material-ui/core';
-import CodeIcon from '@material-ui/icons/Code';
-import BuildIcon from '@material-ui/icons/Build';
-import ComputerIcon from '@material-ui/icons/Computer';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import HeadsetMicIcon from '@material-ui/icons/HeadsetMic';
+import { Grid, isWidthUp, Typography, withWidth } from '@material-ui/core';
 import CalendarTodayIcon from '@material-ui/icons/CalendarToday';
-import CloudIcon from '@material-ui/icons/Cloud';
-import MeassageIcon from '@material-ui/icons/Message';
-import CancelIcon from '@material-ui/icons/Cancel';
+import DirectionsCarRoundedIcon from '@material-ui/icons/DirectionsCarRounded';
+import InfoRoundedIcon from '@material-ui/icons/InfoRounded';
+import PropTypes from 'prop-types';
+import React from 'react';
 import calculateSpacing from './calculateSpacing';
 import FeatureCard from './FeatureCard';
 
@@ -17,83 +11,26 @@ const iconSize = 30;
 
 const features = [
   {
-    color: '#00C853',
-    headline: 'Feature 1',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <BuildIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '0',
-    smDelay: '0',
-  },
-  {
-    color: '#6200EA',
-    headline: 'Feature 2',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
+    color: '#381D2A',
+    headline: 'Availability',
+    text: 'View available and occupied street parking spaces',
     icon: <CalendarTodayIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '200',
-    smDelay: '200',
-  },
-  {
-    color: '#0091EA',
-    headline: 'Feature 3',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <MeassageIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '400',
-    smDelay: '0',
-  },
-  {
-    color: '#d50000',
-    headline: 'Feature 4',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <ComputerIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '0',
-    smDelay: '200',
-  },
-  {
-    color: '#DD2C00',
-    headline: 'Feature 5',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <BarChartIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '200',
-    smDelay: '0',
-  },
-  {
-    color: '#64DD17',
-    headline: 'Feature 6',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <HeadsetMicIcon style={{ fontSize: iconSize }} />,
-    mdDelay: '400',
-    smDelay: '200',
-  },
-  {
-    color: '#304FFE',
-    headline: 'Feature 7',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <CloudIcon style={{ fontSize: iconSize }} />,
     mdDelay: '0',
     smDelay: '0',
   },
   {
-    color: '#C51162',
-    headline: 'Feature 8',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <CodeIcon style={{ fontSize: iconSize }} />,
+    color: '#AABD8C',
+    headline: 'Informative',
+    text: 'View street parking spot information such as price and parking hours',
+    icon: <InfoRoundedIcon style={{ fontSize: iconSize }} />,
     mdDelay: '200',
     smDelay: '200',
   },
   {
-    color: '#00B8D4',
-    headline: 'Feature 9',
-    text:
-      'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et.',
-    icon: <CancelIcon style={{ fontSize: iconSize }} />,
+    color: '#F39B6D',
+    headline: 'Navigation',
+    text: 'Show parking directions using your favourite navigation app',
+    icon: <DirectionsCarRoundedIcon style={{ fontSize: iconSize }} />,
     mdDelay: '400',
     smDelay: '0',
   },

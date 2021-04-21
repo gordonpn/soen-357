@@ -1,17 +1,18 @@
-import React, { Fragment } from 'react';
-import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import {
-  Grid,
-  Typography,
-  Card,
-  Button,
-  Hidden,
   Box,
+  Button,
+  Card,
+  Grid,
+  Hidden,
+  isWidthUp,
+  Typography,
   withStyles,
   withWidth,
-  isWidthUp,
 } from '@material-ui/core';
+import classNames from 'classnames';
+import PropTypes from 'prop-types';
+import React, { Fragment } from 'react';
+import { Link } from 'react-router-dom';
 import WaveBorder from '../../../shared/components/WaveBorder';
 import ZoomImage from '../../../shared/components/ZoomImage';
 
@@ -117,7 +118,7 @@ function HeadSection(props) {
                     >
                       <Box mb={4}>
                         <Typography variant={isWidthUp('lg', width) ? 'h3' : 'h4'}>
-                          Free Template for building a SaaS app using Material-UI
+                          Never struggle to find parking ever again!
                         </Typography>
                       </Box>
                       <div>
@@ -126,20 +127,23 @@ function HeadSection(props) {
                             variant={isWidthUp('lg', width) ? 'h6' : 'body1'}
                             color="textSecondary"
                           >
-                            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
-                            eirmod tempor invidunt
+                            Using our application, you will be able to locate available street
+                            parking space in real-time and start navigating straight to it,
+                            effortlessly. Type in the address, select, and go!
                           </Typography>
                         </Box>
-                        <Button
-                          variant="contained"
-                          color="secondary"
-                          fullWidth
-                          className={classes.extraLargeButton}
-                          classes={{ label: classes.extraLargeButtonLabel }}
-                          href="https://github.com/dunky11/react-saas-template"
-                        >
-                          Download from GitHub
-                        </Button>
+                        <Link to={'/blog'} className={classes.noDecoration}>
+                          <Button
+                            variant="contained"
+                            color="secondary"
+                            fullWidth
+                            className={classes.extraLargeButton}
+                            classes={{ label: classes.extraLargeButtonLabel }}
+                            href="https://github.com/gordonpn/soen-357"
+                          >
+                            Find me parking!
+                          </Button>
+                        </Link>
                       </div>
                     </Box>
                   </Grid>

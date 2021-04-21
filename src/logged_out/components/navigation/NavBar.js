@@ -1,20 +1,18 @@
-import React, { memo } from 'react';
-import PropTypes from 'prop-types';
-import { Link } from 'react-router-dom';
 import {
   AppBar,
-  Toolbar,
-  Typography,
   Button,
   Hidden,
   IconButton,
+  Toolbar,
+  Typography,
   withStyles,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import HomeIcon from '@material-ui/icons/Home';
-import HowToRegIcon from '@material-ui/icons/HowToReg';
-import LockOpenIcon from '@material-ui/icons/LockOpen';
 import BookIcon from '@material-ui/icons/Book';
+import HomeIcon from '@material-ui/icons/Home';
+import MenuIcon from '@material-ui/icons/Menu';
+import PropTypes from 'prop-types';
+import React, { memo } from 'react';
+import { Link } from 'react-router-dom';
 import NavigationDrawer from '../../../shared/components/NavigationDrawer';
 
 const styles = (theme) => ({
@@ -57,18 +55,8 @@ function NavBar(props) {
     },
     {
       link: '/blog',
-      name: 'Blog',
+      name: 'Map',
       icon: <BookIcon className="text-white" />,
-    },
-    {
-      name: 'Register',
-      onClick: openRegisterDialog,
-      icon: <HowToRegIcon className="text-white" />,
-    },
-    {
-      name: 'Login',
-      onClick: openLoginDialog,
-      icon: <LockOpenIcon className="text-white" />,
     },
   ];
   return (
@@ -76,16 +64,13 @@ function NavBar(props) {
       <AppBar position="fixed" className={classes.appBar}>
         <Toolbar className={classes.toolbar}>
           <div>
-            <Typography variant="h4" className={classes.brandText} display="inline" color="primary">
-              Wa
-            </Typography>
             <Typography
               variant="h4"
               className={classes.brandText}
               display="inline"
               color="secondary"
             >
-              Ver
+              Live Parking Finder Prototype
             </Typography>
           </div>
           <div>
