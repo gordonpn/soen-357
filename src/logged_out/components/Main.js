@@ -1,16 +1,16 @@
-import React, { memo, useState, useEffect, useCallback } from 'react';
-import PropTypes from 'prop-types';
-import AOS from 'aos/dist/aos';
 import { withStyles } from '@material-ui/core';
-import NavBar from './navigation/NavBar';
-import Footer from './footer/Footer';
+import AOS from 'aos/dist/aos';
 import 'aos/dist/aos.css';
-import CookieRulesDialog from './cookies/CookieRulesDialog';
-import CookieConsent from './cookies/CookieConsent';
+import PropTypes from 'prop-types';
+import React, { memo, useCallback, useEffect, useState } from 'react';
+import smoothScrollTop from '../../shared/functions/smoothScrollTop';
 import dummyBlogPosts from '../dummy_data/blogPosts';
+import CookieConsent from './cookies/CookieConsent';
+import CookieRulesDialog from './cookies/CookieRulesDialog';
+import Footer from './footer/Footer';
+import NavBar from './navigation/NavBar';
 import DialogSelector from './register_login/DialogSelector';
 import Routing from './Routing';
-import smoothScrollTop from '../../shared/functions/smoothScrollTop';
 
 AOS.init({ once: true });
 
@@ -31,13 +31,13 @@ function Main(props) {
 
   const selectHome = useCallback(() => {
     smoothScrollTop();
-    document.title = 'WaVer - Free template for building a SaaS or admin application';
+    document.title = 'Live Parking Finder Prototype';
     setSelectedTab('Home');
   }, [setSelectedTab]);
 
   const selectBlog = useCallback(() => {
     smoothScrollTop();
-    document.title = 'WaVer - Blog';
+    document.title = 'Blog';
     setSelectedTab('Blog');
   }, [setSelectedTab]);
 

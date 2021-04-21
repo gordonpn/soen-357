@@ -1,7 +1,7 @@
-import React, { Fragment, useState, useCallback, useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { Box, Button, Snackbar, Typography, withStyles } from '@material-ui/core';
 import Cookies from 'js-cookie';
-import { Snackbar, Button, Typography, Box, withStyles } from '@material-ui/core';
+import PropTypes from 'prop-types';
+import React, { Fragment, useCallback, useEffect, useState } from 'react';
 import fetchIpData from './fetchIpData';
 
 const styles = (theme) => ({
@@ -90,11 +90,11 @@ function CookieConsent(props) {
       action={
         <Fragment>
           <Box mr={1}>
-            <Button color="primary" onClick={handleCookieRulesDialogOpen}>
+            <Button color="secondary" onClick={handleCookieRulesDialogOpen}>
               More details
             </Button>
           </Box>
-          <Button color="primary" onClick={onAccept}>
+          <Button color="secondary" onClick={onAccept}>
             Got it!
           </Button>
         </Fragment>

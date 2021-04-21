@@ -1,8 +1,7 @@
-import React, { Fragment, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import HeadSection from './HeadSection';
+import React, { Fragment, useEffect } from 'react';
 import FeatureSection from './FeatureSection';
-import PricingSection from './PricingSection';
+import HeadSection from './HeadSection';
 
 function Home(props) {
   const { selectHome } = props;
@@ -13,7 +12,6 @@ function Home(props) {
     <Fragment>
       <HeadSection />
       <FeatureSection />
-      <PricingSection />
     </Fragment>
   );
 }
