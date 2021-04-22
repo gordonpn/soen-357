@@ -1,12 +1,23 @@
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import React, { useEffect, useRef, useState } from 'react';
-import ReactMapGL, { GeolocateControl, Marker, Popup } from 'react-map-gl';
 import AsyncSelect from 'react-select/async';
 import { useDebouncedCallback } from 'use-debounce';
 import { getSearchResults } from '../../../utils/api/mapbox.js';
+import ReactMapGL, { Marker, Popup, GeolocateControl, FlyToInterpolator } from 'react-map-gl';
+import useSupercluster from 'use-supercluster';
 import { getParkings } from '../../../utils/api/parking.js';
 import ParkingInfo from './ParkingInfo.js';
+
+const clusterStyle = {
+  color: '#fff',
+  background: '#1978c8',
+  borderRadius: '50%',
+  padding: '10px',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+};
 
 const Map = () => {
   const geolocateControlStyle = {
@@ -24,7 +35,23 @@ const Map = () => {
     }),
   };
 
-  const mapRef = useRef('map');
+  const handleClusterClick = (cluster) => {
+    const expansionZoom = Math.min(supercluster.getClusterExpansionZoom(cluster.id), 20);
+    const [longitude, latitude] = cluster.geometry.coordinates;
+    setViewport({
+      ...viewport,
+      latitude,
+      longitude,
+      zoom: expansionZoom,
+      transitionInterpolator: new FlyToInterpolator({
+        speed: 2,
+      }),
+      transitionDuration: 'auto',
+    });
+  };
+
+  const mapRef = useRef('');
+
   const [location, setLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
@@ -37,25 +64,26 @@ const Map = () => {
     longitude: -73.554,
     zoom: 11,
   });
-  const markers = React.useMemo(
-    () =>
-      parkings.map((parking) => (
-        <Marker
-          key={'marker' + parking._id}
-          longitude={parking.nPositionCentreLongitude}
-          latitude={parking.nPositionCentreLatitude}
-          offsetLeft={-10}
-          offsetTop={-10}
-        >
-          <FiberManualRecordIcon
-            style={{ color: '#38BAFF', cursor: 'pointer' }}
-            fontSize="small"
-            onClick={() => setParkingClicked(parking)}
-          />
-        </Marker>
-      )),
-    [parkings]
-  );
+
+  const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
+  const points = parkings.map((parking) => ({
+    type: 'Feature',
+    properties: { cluster: false, parkingId: parking._id, parking: parking },
+    geometry: {
+      type: 'Point',
+      coordinates: [
+        parseFloat(parking.nPositionCentreLongitude),
+        parseFloat(parking.nPositionCentreLatitude),
+      ],
+    },
+  }));
+
+  const { clusters, supercluster } = useSupercluster({
+    points,
+    bounds,
+    zoom: viewport.zoom,
+    options: { radius: 50, maxZoom: 20, minPoints: 3 },
+  });
 
   const handleLocationInput = useDebouncedCallback((e) => {
     const searchLocation = e;
@@ -72,6 +100,49 @@ const Map = () => {
       });
     }
   };
+
+  const getClusters = clusters.map((cluster) => {
+    const { cluster: isCluster, point_count: pointCount } = cluster.properties;
+    if (isCluster) {
+      const [longitude, latitude] = cluster.geometry.coordinates;
+      return (
+        <Marker
+          onClick={() => handleClusterClick(cluster)}
+          key={`cluster-${cluster.id}`}
+          latitude={latitude}
+          longitude={longitude}
+        >
+          <div
+            style={{
+              width: `${40 + (pointCount / points.length) * 60}px`,
+              height: `${40 + (pointCount / points.length) * 60}px`,
+              cursor: 'pointer',
+              ...clusterStyle,
+            }}
+          >
+            {pointCount}
+          </div>
+        </Marker>
+      );
+    }
+
+    const { nPositionCentreLongitude, nPositionCentreLatitude } = cluster.properties.parking;
+    return (
+      <Marker
+        key={'marker' + cluster.properties.parkingId}
+        longitude={nPositionCentreLongitude}
+        latitude={nPositionCentreLatitude}
+        offsetLeft={-10}
+        offsetTop={-10}
+      >
+        <FiberManualRecordIcon
+          style={{ color: '#38BAFF', cursor: 'pointer' }}
+          fontSize="small"
+          onClick={() => setParkingClicked(cluster.properties.parking)}
+        />
+      </Marker>
+    );
+  });
 
   useEffect(() => {
     const getStreetParkings = async () => {
@@ -101,7 +172,7 @@ const Map = () => {
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
       >
-        {parkings.length ? markers : null}
+        {parkings.length ? getClusters : null}
         {location ? (
           <Marker
             longitude={location.longitude}
