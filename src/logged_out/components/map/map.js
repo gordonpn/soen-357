@@ -65,6 +65,26 @@ const Map = () => {
     zoom: 11,
   });
 
+  const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
+  const points = parkings.map((parking) => ({
+    type: 'Feature',
+    properties: { cluster: false, parkingId: parking._id, parking: parking },
+    geometry: {
+      type: 'Point',
+      coordinates: [
+        parseFloat(parking.nPositionCentreLongitude),
+        parseFloat(parking.nPositionCentreLatitude),
+      ],
+    },
+  }));
+
+  const { clusters, supercluster } = useSupercluster({
+    points,
+    bounds,
+    zoom: viewport.zoom,
+    options: { radius: 50, maxZoom: 20, minPoints: 3 },
+  });
+
   const handleLocationInput = useDebouncedCallback((e) => {
     const searchLocation = e;
     if (searchLocation) {
@@ -80,26 +100,6 @@ const Map = () => {
       });
     }
   };
-  const points = parkings.map((parking) => ({
-    type: 'Feature',
-    properties: { cluster: false, parkingId: parking._id, parking: parking },
-    geometry: {
-      type: 'Point',
-      coordinates: [
-        parseFloat(parking.nPositionCentreLongitude),
-        parseFloat(parking.nPositionCentreLatitude),
-      ],
-    },
-  }));
-
-  const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
-
-  const { clusters, supercluster } = useSupercluster({
-    points,
-    bounds,
-    zoom: viewport.zoom,
-    options: { radius: 20, maxZoom: 20, minPoints: 5 },
-  });
 
   const getClusters = clusters.map((cluster) => {
     const { cluster: isCluster, point_count: pointCount } = cluster.properties;
@@ -114,8 +114,8 @@ const Map = () => {
         >
           <div
             style={{
-              width: `${20 + (pointCount / points.length) * 30}px`,
-              height: `${20 + (pointCount / points.length) * 30}px`,
+              width: `${40 + (pointCount / points.length) * 60}px`,
+              height: `${40 + (pointCount / points.length) * 60}px`,
               cursor: 'pointer',
               ...clusterStyle,
             }}
