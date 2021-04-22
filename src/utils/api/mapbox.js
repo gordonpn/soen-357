@@ -1,20 +1,18 @@
 import axios from 'axios';
-// const hq = {
-//     longitude: -73.745181,
-//     latitude: 45.4644455,
-//   };
+
 const mapbox = 'https://api.mapbox.com';
 const token = process.env.REACT_APP_MAPBOX;
 
 const getLocationInfo = (dest) => {
   const encodeStr = encodeURI(dest);
-  const encodeCountries = encodeURI('ca,us,mx');
+  const encodeCountries = encodeURI('ca');
   const options = {
     method: 'get',
     url: mapbox + '/geocoding/v5/mapbox.places/' + encodeStr + '.json',
     params: {
       access_token: token,
       country: encodeCountries,
+      proximity: '-73.554, 45.5088',
     },
   };
   return axios(options);
@@ -25,6 +23,8 @@ const getSearchResults = async (dest) => {
     const { data: res } = await getLocationInfo(dest);
     return res.features.map((feature) => ({
       label: feature.place_name,
+      value: feature.place_name,
+      coor: feature.center,
     }));
   } catch (e) {
     return [];
