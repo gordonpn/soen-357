@@ -3,6 +3,7 @@ import ReactMapGL, { Marker, GeolocateControl } from 'react-map-gl';
 import { getSearchResults } from '../../../utils/api/mapbox.js';
 import { getParkings } from '../../../utils/api/parking.js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
 import AsyncSelect from 'react-select/async';
 import { useDebouncedCallback } from 'use-debounce';
 
@@ -23,7 +24,7 @@ const Map = () => {
   };
 
   const mapRef = useRef('map');
-
+  const [location, setLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
   const [viewport, setViewport] = useState({
@@ -58,6 +59,7 @@ const Map = () => {
 
   const handleLocationSelect = (e) => {
     if (e) {
+      setLocation({ latitude: e.coor[1], longitude: e.coor[0] });
       setViewport((prev) => {
         return { ...prev, zoom: 15, latitude: e.coor[1], longitude: e.coor[0] };
       });
@@ -93,6 +95,16 @@ const Map = () => {
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
       >
         {parkings.length ? markers : null}
+        {location ? (
+          <Marker
+            longitude={location.longitude}
+            latitude={location.latitude}
+            offsetLeft={-10}
+            offsetTop={-10}
+          >
+            <LocationOnIcon style={{ color: 'red' }} fontSize="large" />
+          </Marker>
+        ) : null}
 
         <GeolocateControl
           style={geolocateControlStyle}
