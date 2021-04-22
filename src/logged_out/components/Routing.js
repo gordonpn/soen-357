@@ -5,7 +5,7 @@ import PropsRoute from '../../shared/components/PropsRoute';
 import Home from './home/Home';
 import Blog from './blog/Blog';
 import BlogPost from './blog/BlogPost';
-
+import Map from './map/map';
 function Routing(props) {
   const { blogPosts, selectBlog, selectHome } = props;
   return (
@@ -25,9 +25,9 @@ function Routing(props) {
       <PropsRoute
         exact
         path="/blog"
-        component={Blog}
-        selectBlog={selectBlog}
-        blogPosts={blogPosts}
+        component={Map}
+        // selectBlog={selectBlog}
+        // blogPosts={blogPosts}
       />
       <PropsRoute path="/" component={Home} selectHome={selectHome} />
     </Switch>
