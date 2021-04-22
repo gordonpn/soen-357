@@ -9,7 +9,7 @@ function Routing(props) {
   const { selectHome } = props;
   return (
     <Switch>
-      <PropsRoute exact path="/blog" component={Map} />
+      <PropsRoute exact path="/map" component={Map} />
       <PropsRoute path="/" component={Home} selectHome={selectHome} />
     </Switch>
   );
