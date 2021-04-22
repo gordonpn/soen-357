@@ -187,11 +187,11 @@ const Map = () => {
         {parkingClicked && (
           <Popup
             anchor="top"
-            longitude={parkingClicked.properties.parking.nPositionCentreLongitude}
-            latitude={parkingClicked.properties.parking.nPositionCentreLatitude}
+            longitude={parkingClicked.nPositionCentreLongitude}
+            latitude={parkingClicked.nPositionCentreLatitude}
             onClose={setParkingClicked}
           >
-            <ParkingInfo info={parkingClicked.properties.parking} />
+            <ParkingInfo info={parkingClicked} />
           </Popup>
         )}
         <GeolocateControl
