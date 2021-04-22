@@ -1,12 +1,12 @@
-import React, { useEffect } from 'react';
-import PropTypes from 'prop-types';
+import { Box, Card, Grid, Typography, withStyles } from '@material-ui/core';
 import classNames from 'classnames';
 import format from 'date-fns/format';
-import { Grid, Typography, Card, Box, withStyles } from '@material-ui/core';
-import BlogCard from './BlogCard';
+import PropTypes from 'prop-types';
+import React, { useEffect } from 'react';
 import ShareButton from '../../../shared/components/ShareButton';
 import ZoomImage from '../../../shared/components/ZoomImage';
 import smoothScrollTop from '../../../shared/functions/smoothScrollTop';
+import BlogCard from './BlogCard';
 
 const styles = (theme) => ({
   blogContentWrapper: {
@@ -35,7 +35,7 @@ function BlogPost(props) {
   const { classes, date, title, src, content, otherArticles } = props;
 
   useEffect(() => {
-    document.title = `WaVer - ${title}`;
+    document.title = `${title}`;
     smoothScrollTop();
   }, [title]);
 
