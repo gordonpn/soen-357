@@ -98,14 +98,13 @@ const Map = () => {
     points,
     bounds,
     zoom: viewport.zoom,
-    options: { radius: 70, maxZoom: 20 },
+    options: { radius: 20, maxZoom: 20, minPoints: 5 },
   });
 
   const getClusters = clusters.map((cluster) => {
-    const [longitude, latitude] = cluster.geometry.coordinates;
     const { cluster: isCluster, point_count: pointCount } = cluster.properties;
-
     if (isCluster) {
+      const [longitude, latitude] = cluster.geometry.coordinates;
       return (
         <Marker
           onClick={() => handleClusterClick(cluster)}
@@ -127,18 +126,19 @@ const Map = () => {
       );
     }
 
+    const { nPositionCentreLongitude, nPositionCentreLatitude } = cluster.properties.parking;
     return (
       <Marker
-        key={'marker' + cluster.id}
-        longitude={longitude}
-        latitude={latitude}
+        key={'marker' + cluster.properties.parkingId}
+        longitude={nPositionCentreLongitude}
+        latitude={nPositionCentreLatitude}
         offsetLeft={-10}
         offsetTop={-10}
       >
         <FiberManualRecordIcon
           style={{ color: '#38BAFF', cursor: 'pointer' }}
           fontSize="small"
-          onClick={() => setParkingClicked(cluster)}
+          onClick={() => setParkingClicked(cluster.properties.parking)}
         />
       </Marker>
     );
