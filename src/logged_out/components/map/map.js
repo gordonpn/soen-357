@@ -1,33 +1,39 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-import ReactMapGL, { Layer, Marker, Source, GeolocateControl } from 'react-map-gl';
-import { createRoutes } from '../../../utils/api/mapbox.js';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import React, { useEffect, useState, useRef } from 'react';
+import ReactMapGL, { Marker, GeolocateControl } from 'react-map-gl';
+import { getSearchResults } from '../../../utils/api/mapbox.js';
 import { getParkings } from '../../../utils/api/parking.js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import LocationOnIcon from '@material-ui/icons/LocationOn';
+import AsyncSelect from 'react-select/async';
+import { useDebouncedCallback } from 'use-debounce';
 
 const Map = () => {
-  const hq = {
-    longitude: -73.745181,
-    latitude: 45.4644455,
-  };
-  const [viewport, setViewport] = useState({
-    width: '100vw',
-    height: '100vh',
-    latitude: 45.4644455,
-    longitude: -73.745181,
-    zoom: 8,
-  });
   const geolocateControlStyle = {
-    right: 100,
-    top: 100,
+    right: '5%',
+    top: '10vh',
+  };
+
+  const searchBarStyle = {
+    container: () => ({
+      zIndex: 10,
+      position: 'relative',
+      top: '10vh',
+      left: '25%',
+      width: '50%',
+    }),
   };
 
   const mapRef = useRef('map');
-
-  const [destination, setDestination] = useState('');
+  const [location, setLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
-
+  const [viewport, setViewport] = useState({
+    width: '100vw',
+    height: '100vh',
+    latitude: 45.5088,
+    longitude: -73.554,
+    zoom: 11,
+  });
   const markers = React.useMemo(
     () =>
       parkings.map((parking) => (
@@ -43,6 +49,23 @@ const Map = () => {
       )),
     [parkings]
   );
+
+  const handleLocationInput = useDebouncedCallback((e) => {
+    const searchLocation = e;
+    if (searchLocation) {
+      return getSearchResults(searchLocation);
+    }
+  }, 100);
+
+  const handleLocationSelect = (e) => {
+    if (e) {
+      setLocation({ latitude: e.coor[1], longitude: e.coor[0] });
+      setViewport((prev) => {
+        return { ...prev, zoom: 15, latitude: e.coor[1], longitude: e.coor[0] };
+      });
+    }
+  };
+
   useEffect(() => {
     const getStreetParkings = async () => {
       setParkings(await getParkings());
@@ -51,10 +74,19 @@ const Map = () => {
       getStreetParkings();
       setInitializeMap(false);
     }
-  });
+  }, [initializeMap]);
 
   return (
     <div>
+      <AsyncSelect
+        styles={searchBarStyle}
+        cacheOptions
+        loadOptions={(e) => handleLocationInput(e)}
+        onInputChange={(e) => handleLocationInput(e)}
+        onChange={handleLocationSelect}
+        isClearable={true}
+      />
+
       <ReactMapGL
         {...viewport}
         ref={mapRef}
@@ -62,40 +94,18 @@ const Map = () => {
         mapboxApiAccessToken={process.env.REACT_APP_MAPBOX}
         onViewportChange={(nextViewport) => setViewport(nextViewport)}
       >
-        {parkings.length
-          ? markers
-          : // parkings.map((parking) => (
-            //     <div key={parking._id}>
-            //         {/* <Source key={'source' + parking._id} type="geojson" data={dest.route}>
-            //             <Layer
-            //                 id={dest._id}
-            //                 key={dest._id}
-            //                 {...dest.routeStyle}
-            //             />
-            //         </Source> */}
-            //         <Marker
-            //             key={'marker' + parking._id}
-            //             longitude={parking.nLongitude}
-            //             latitude={parking.nLatitude}
-            //         // offsetLeft={-10}
-            //         // offsetTop={-10}
-            //         >
-            //             <FiberManualRecordIcon
+        {parkings.length ? markers : null}
+        {location ? (
+          <Marker
+            longitude={location.longitude}
+            latitude={location.latitude}
+            offsetLeft={-10}
+            offsetTop={-10}
+          >
+            <LocationOnIcon style={{ color: 'red' }} fontSize="large" />
+          </Marker>
+        ) : null}
 
-            //                 fontSize="small"
-            //             />
-            //         </Marker>
-            //     </div>
-            // )
-            // )
-            null}
-
-        {/* <Marker longitude={hq.longitude} latitude={hq.latitude} offsetLeft={-10} offsetTop={-10}>
-                    <FiberManualRecordIcon
-                
-                    fontSize="small"
-                     />
-                </Marker> */}
         <GeolocateControl
           style={geolocateControlStyle}
           positionOptions={{ enableHighAccuracy: true }}
