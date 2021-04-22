@@ -25,14 +25,50 @@ const getParkings = async () => {
   return val;
 };
 
-const getParkingPeriods = (sNoPlace) => {
-  const options = {
+const getParkingPeriods = async (sNoPlace) => {
+  const regulationOptions = {
     method: 'get',
     url: 'https://data.montreal.ca/api/3/action/datastore_search',
     params: {
-      resource_id: 'e915d611-87d1-4ae1-a127-33a98ccf84f7a',
+      filters: {
+        sNoEmplacement: sNoPlace,
+      },
+      resource_id: 'e915d611-87d1-4ae1-a127-33a98ccf84f7',
     },
   };
+
+  const {
+    data: {
+      result: { records: regulationCodes },
+    },
+  } = await axios(regulationOptions);
+
+  const periodCodes = [];
+
+  regulationCodes.forEach(async (code) => {
+    const regulationPeriodOptions = {
+      method: 'get',
+      url: 'https://data.montreal.ca/api/3/action/datastore_search',
+      params: {
+        filters: {
+          sCode: code.sCodeAutocollant,
+        },
+        resource_id: 'bd0df28d-7813-4d27-b445-129fb214f7f7',
+      },
+    };
+
+    const {
+      data: {
+        result: { records: periodCode },
+      },
+    } = await axios(regulationPeriodOptions);
+
+    periodCode.forEach((thisPeriodCode) => {
+      periodCodes.push(thisPeriodCode);
+    });
+  });
+
+  return periodCodes;
 };
 
 export { getParkings, getParkingPeriods };
