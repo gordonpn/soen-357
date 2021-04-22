@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useMemo } from 'react';
-import ReactMapGL, { Layer, Marker, Source, GeolocateControl } from 'react-map-gl';
-import { createRoutes } from '../../../utils/api/mapbox.js';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
-import { getParkings } from '../../../utils/api/parking.js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactMapGL, { GeolocateControl, Marker, Popup } from 'react-map-gl';
+import { getParkings } from '../../../utils/api/parking.js';
+import ParkingInfo from './ParkingInfo.js';
 
 const Map = () => {
   const hq = {
@@ -27,6 +26,7 @@ const Map = () => {
   const [destination, setDestination] = useState('');
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
+  const [parkingClicked, setParkingClicked] = useState(null);
 
   const markers = React.useMemo(
     () =>
@@ -38,11 +38,16 @@ const Map = () => {
           offsetLeft={-10}
           offsetTop={-10}
         >
-          <FiberManualRecordIcon style={{ color: '#38BAFF' }} fontSize="small" />
+          <FiberManualRecordIcon
+            style={{ color: '#38BAFF', cursor: 'pointer' }}
+            fontSize="small"
+            onClick={() => setParkingClicked(parking)}
+          />
         </Marker>
       )),
     [parkings]
   );
+
   useEffect(() => {
     const getStreetParkings = async () => {
       setParkings(await getParkings());
@@ -92,10 +97,20 @@ const Map = () => {
 
         {/* <Marker longitude={hq.longitude} latitude={hq.latitude} offsetLeft={-10} offsetTop={-10}>
                     <FiberManualRecordIcon
-                
+
                     fontSize="small"
                      />
                 </Marker> */}
+        {parkingClicked && (
+          <Popup
+            anchor="top"
+            longitude={parkingClicked.nPositionCentreLongitude}
+            latitude={parkingClicked.nPositionCentreLatitude}
+            onClose={setParkingClicked}
+          >
+            <ParkingInfo info={parkingClicked} />
+          </Popup>
+        )}
         <GeolocateControl
           style={geolocateControlStyle}
           positionOptions={{ enableHighAccuracy: true }}
