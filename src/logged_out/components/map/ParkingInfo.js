@@ -1,5 +1,5 @@
 import Typography from '@material-ui/core/Typography';
-import React, { useEffect, useState } from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import { getParkingPeriods } from '../../../utils/api/parking';
 
 const ParkingInfo = ({ info }) => {
@@ -39,4 +39,4 @@ const ParkingInfo = ({ info }) => {
   );
 };
 
-export default ParkingInfo;
+export default memo(ParkingInfo);

@@ -123,12 +123,6 @@ const Map = () => {
             <ParkingInfo info={parkingClicked} />
           </Popup>
         )}
-        {/* <Marker longitude={hq.longitude} latitude={hq.latitude} offsetLeft={-10} offsetTop={-10}>
-                    <FiberManualRecordIcon
-
-                    fontSize="small"
-                     />
-                </Marker> */}
         <GeolocateControl
           style={geolocateControlStyle}
           positionOptions={{ enableHighAccuracy: true }}
