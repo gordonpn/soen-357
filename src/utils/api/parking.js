@@ -3,7 +3,7 @@ import axios from 'axios';
 const range = (start, stop, step) =>
   Array.from({ length: (stop - start) / step + 1 }, (_, i) => start + i * step);
 const getParkings = async () => {
-  const dataRange = range(0, 200, 100);
+  const dataRange = range(0, 300, 100);
   const parkings = dataRange.map(async (idx) => {
     const options = {
       method: 'get',
