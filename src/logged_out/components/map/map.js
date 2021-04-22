@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useRef } from 'react';
-import ReactMapGL, { Marker, GeolocateControl } from 'react-map-gl';
-import { getSearchResults } from '../../../utils/api/mapbox.js';
-import { getParkings } from '../../../utils/api/parking.js';
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import React, { useEffect, useRef, useState } from 'react';
+import ReactMapGL, { GeolocateControl, Marker, Popup } from 'react-map-gl';
 import AsyncSelect from 'react-select/async';
 import { useDebouncedCallback } from 'use-debounce';
+import { getSearchResults } from '../../../utils/api/mapbox.js';
+import { getParkings } from '../../../utils/api/parking.js';
+import ParkingInfo from './ParkingInfo.js';
 
 const Map = () => {
   const geolocateControlStyle = {
@@ -27,6 +28,8 @@ const Map = () => {
   const [location, setLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
+  const [parkingClicked, setParkingClicked] = useState(null);
+
   const [viewport, setViewport] = useState({
     width: '100vw',
     height: '100vh',
@@ -44,7 +47,11 @@ const Map = () => {
           offsetLeft={-10}
           offsetTop={-10}
         >
-          <FiberManualRecordIcon style={{ color: '#38BAFF' }} fontSize="small" />
+          <FiberManualRecordIcon
+            style={{ color: '#38BAFF', cursor: 'pointer' }}
+            fontSize="small"
+            onClick={() => setParkingClicked(parking)}
+          />
         </Marker>
       )),
     [parkings]
@@ -106,6 +113,16 @@ const Map = () => {
           </Marker>
         ) : null}
 
+        {parkingClicked && (
+          <Popup
+            anchor="top"
+            longitude={parkingClicked.nPositionCentreLongitude}
+            latitude={parkingClicked.nPositionCentreLatitude}
+            onClose={setParkingClicked}
+          >
+            <ParkingInfo info={parkingClicked} />
+          </Popup>
+        )}
         <GeolocateControl
           style={geolocateControlStyle}
           positionOptions={{ enableHighAccuracy: true }}
