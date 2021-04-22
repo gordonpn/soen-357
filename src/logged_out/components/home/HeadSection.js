@@ -135,7 +135,7 @@ function HeadSection(props) {
                             effortlessly. Type in the address, select, and go!
                           </Typography>
                         </Box>
-                        <Link to={'/blog'} className={classes.noDecoration}>
+                        <Link to={'/map'} className={classes.noDecoration}>
                           <Button
                             variant="contained"
                             color="secondary"

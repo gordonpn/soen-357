@@ -52,7 +52,7 @@ function NavBar(props) {
       icon: <HomeIcon className="text-white" />,
     },
     {
-      link: '/blog',
+      link: '/map',
       name: 'Map',
       icon: <MapRoundedIcon className="text-white" />,
     },

@@ -1,10 +1,9 @@
-import React, { memo } from 'react';
 import PropTypes from 'prop-types';
+import React, { memo } from 'react';
 import { Switch } from 'react-router-dom';
 import PropsRoute from '../../shared/components/PropsRoute';
-import Home from './home/Home';
-import Blog from './blog/Blog';
 import BlogPost from './blog/BlogPost';
+import Home from './home/Home';
 import Map from './map/map';
 function Routing(props) {
   const { blogPosts, selectBlog, selectHome } = props;
@@ -24,7 +23,7 @@ function Routing(props) {
       ))}
       <PropsRoute
         exact
-        path="/blog"
+        path="/map"
         component={Map}
         // selectBlog={selectBlog}
         // blogPosts={blogPosts}
