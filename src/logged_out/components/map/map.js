@@ -4,12 +4,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { useDebouncedCallback } from 'use-debounce';
 import { getSearchResults } from '../../../utils/api/mapbox.js';
-import ReactMapGL, {
-  Marker,
-  Popup,
-  GeolocateControl,
-  FlyToInterpolator,
-} from 'react-map-gl';
+import ReactMapGL, { Marker, Popup, GeolocateControl, FlyToInterpolator } from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import { getParkings } from '../../../utils/api/parking.js';
 import ParkingInfo from './ParkingInfo.js';
