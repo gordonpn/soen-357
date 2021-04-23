@@ -72,7 +72,12 @@ const Map = () => {
       parkings.map((parking) => {
         return {
           type: 'Feature',
-          properties: { cluster: false, parkingId: parking._id, parking: parking, taken: Math.random() < 0.4},
+          properties: {
+            cluster: false,
+            parkingId: parking._id,
+            parking: parking,
+            taken: Math.random() < 0.4,
+          },
           geometry: {
             type: 'Point',
             coordinates: [
@@ -80,9 +85,10 @@ const Map = () => {
               parseFloat(parking.nPositionCentreLatitude),
             ],
           },
-        }
-      }), [parkings]);
-
+        };
+      }),
+    [parkings]
+  );
 
   const { clusters, supercluster } = useSupercluster({
     points,
@@ -142,7 +148,7 @@ const Map = () => {
         offsetTop={-10}
       >
         <FiberManualRecordIcon
-          style={{ color: cluster.properties.taken ? "#f44336" : "#38BAFF", cursor: 'pointer' }}
+          style={{ color: cluster.properties.taken ? '#f44336' : '#38BAFF', cursor: 'pointer' }}
           fontSize="small"
           onClick={() => setParkingClicked(cluster.properties.parking)}
         />
