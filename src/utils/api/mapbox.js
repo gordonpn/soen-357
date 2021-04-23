@@ -48,9 +48,9 @@ const getAllRoutes = async (curloc, dest) => {
     url:
       mapbox +
       '/directions/v5/mapbox/driving/' +
-      curloc.longitude +
+      curloc[0] +
       ',' +
-      curloc.latitude +
+      curloc[1] +
       ';' +
       destCoor.longitude +
       ',' +
@@ -81,7 +81,6 @@ const createRoutes = async (curloc, dest) => {
   const route = await getAllRoutes(curloc, dest);
 
   return {
-    _id: dest._id,
     destCoor: route.destCoor,
     route: {
       type: 'FeatureCollection',

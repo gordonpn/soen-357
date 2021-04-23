@@ -20,7 +20,9 @@ const getParkings = async () => {
   });
 
   const res = await Promise.all(parkings);
-  return res.flat();
+  return res.flat().filter((parking) => {
+    return !parking.sNoPlace.startsWith('YY');
+  });
 };
 
 const getParkingPeriods = async (sNoPlace) => {
