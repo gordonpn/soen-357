@@ -144,6 +144,15 @@ const Map = () => {
   });
 
   useEffect(() => {
+    const timer = window.setInterval(() => {
+      setInitializeMap(true);
+    }, 60000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
     const getStreetParkings = async () => {
       setParkings(await getParkings());
     };

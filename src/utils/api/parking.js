@@ -21,7 +21,7 @@ const getParkings = async () => {
 
   const res = await Promise.all(parkings);
   return res.flat().filter((parking) => {
-    return !parking.sNoPlace.startsWith('YY');
+    return !parking.sNoPlace.startsWith('YY') && Math.random() > 0.8;
   });
 };
 
