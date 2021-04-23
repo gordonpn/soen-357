@@ -85,7 +85,6 @@ const Map = () => {
             cluster: false,
             parkingId: parking._id,
             parking: parking,
-            taken: Math.random() < 0.4,
           },
           geometry: {
             type: 'Point',
@@ -157,7 +156,7 @@ const Map = () => {
         offsetTop={-10}
       >
         <FiberManualRecordIcon
-          style={{ color: cluster.properties.taken ? '#f44336' : '#38BAFF', cursor: 'pointer' }}
+          style={{ color: '#38BAFF', cursor: 'pointer' }}
           fontSize="small"
           onClick={() => setParkingClicked(cluster.properties.parking)}
         />
