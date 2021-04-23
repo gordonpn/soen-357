@@ -69,7 +69,7 @@ const Map = () => {
 
   useEffect(() => {
     const timer = window.setInterval(() => {
-      setInitializeMap(true)
+      setInitializeMap(true);
     }, 60000);
     return () => {
       window.clearInterval(timer);
