@@ -1,21 +1,21 @@
 import FiberManualRecordIcon from '@material-ui/icons/FiberManualRecord';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
+import * as turf from '@turf/turf';
 import React, { useEffect, useRef, useState } from 'react';
-import AsyncSelect from 'react-select/async';
-import { useDebouncedCallback } from 'use-debounce';
-import { createRoutes, getSearchResults } from '../../../utils/api/mapbox.js';
 import ReactMapGL, {
-  Source,
+  FlyToInterpolator,
+  GeolocateControl,
   Layer,
   Marker,
   Popup,
-  GeolocateControl,
-  FlyToInterpolator,
+  Source,
 } from 'react-map-gl';
+import AsyncSelect from 'react-select/async';
+import { useDebouncedCallback } from 'use-debounce';
 import useSupercluster from 'use-supercluster';
-import { getParkings } from '../../../utils/api/parking.js';
+import { createRoutes, getSearchResults } from '../../../utils/api/mapbox.js';
+import { getParkingPeriods, getParkings } from '../../../utils/api/parking.js';
 import ParkingInfo from './ParkingInfo.js';
-import * as turf from '@turf/turf';
 
 const clusterStyle = {
   color: '#fff',
@@ -30,7 +30,7 @@ const clusterStyle = {
 const Map = () => {
   const geolocateControlStyle = {
     right: '5%',
-    top: '10vh',
+    top: '8vh',
   };
 
   const searchBarStyle = {
@@ -64,9 +64,11 @@ const Map = () => {
   const [currlocation, setCurrLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
-  const [parkingClicked, setParkingClicked] = useState(null);
   const [points, setPoints] = useState([]);
   const [parkingRoute, setParkingRoute] = useState(null);
+  const [parkingClicked, setParkingClicked] = useState(undefined);
+  const [parkingRegulations, setParkingRegulations] = useState(undefined);
+
   const [viewport, setViewport] = useState({
     width: '100vw',
     height: '100vh',
@@ -188,6 +190,18 @@ const Map = () => {
     }
   }, [points, currlocation]);
 
+  useEffect(() => {
+    const fetchParkingPeriods = async () => {
+      setParkingRegulations(await getParkingPeriods(parkingClicked.sNoPlace));
+    };
+
+    if (parkingClicked) {
+      fetchParkingPeriods();
+    } else {
+      setParkingRegulations(undefined);
+    }
+  }, [parkingClicked]);
+
   return (
     <div>
       <AsyncSelect
@@ -219,14 +233,17 @@ const Map = () => {
           </Marker>
         ) : null}
 
-        {parkingClicked && (
+        {parkingClicked && parkingRegulations && (
           <Popup
             anchor="top"
             longitude={parkingClicked.nPositionCentreLongitude}
             latitude={parkingClicked.nPositionCentreLatitude}
             onClose={setParkingClicked}
+            key={parkingClicked.sNoPlace}
+            capturePointerMove
+            captureScroll
           >
-            <ParkingInfo info={parkingClicked} />
+            <ParkingInfo info={parkingClicked} regulations={parkingRegulations} />
           </Popup>
         )}
         {parkingRoute && (

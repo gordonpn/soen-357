@@ -86,7 +86,7 @@ const createRoutes = async (curloc, dest) => {
     routeStyle: {
       type: 'line',
       paint: {
-        'line-color': '#45ffa8',
+        'line-color': '#8A2BE2',
         'line-width': 5,
       },
     },

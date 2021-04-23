@@ -59,12 +59,12 @@ const getParkingPeriods = async (sNoPlace) => {
 
     const {
       data: {
-        result: { records: periodCode },
+        result: { records: periods },
       },
     } = await axios(regulationPeriodOptions);
 
-    periodCode.forEach((thisPeriodCode) => {
-      periodCodes.push(thisPeriodCode);
+    periods.forEach((thisPeriod) => {
+      periodCodes.push(thisPeriod);
     });
   });
 
