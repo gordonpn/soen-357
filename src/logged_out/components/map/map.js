@@ -67,6 +67,15 @@ const Map = () => {
 
   const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
 
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setInitializeMap(true)
+    }, 60000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
+
   const points = React.useMemo(
     () =>
       parkings.map((parking) => {
