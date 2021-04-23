@@ -66,17 +66,23 @@ const Map = () => {
   });
 
   const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
-  const points = parkings.map((parking) => ({
-    type: 'Feature',
-    properties: { cluster: false, parkingId: parking._id, parking: parking },
-    geometry: {
-      type: 'Point',
-      coordinates: [
-        parseFloat(parking.nPositionCentreLongitude),
-        parseFloat(parking.nPositionCentreLatitude),
-      ],
-    },
-  }));
+
+  const points = React.useMemo(
+    () =>
+      parkings.map((parking) => {
+        return {
+          type: 'Feature',
+          properties: { cluster: false, parkingId: parking._id, parking: parking, taken: Math.random() < 0.4},
+          geometry: {
+            type: 'Point',
+            coordinates: [
+              parseFloat(parking.nPositionCentreLongitude),
+              parseFloat(parking.nPositionCentreLatitude),
+            ],
+          },
+        }
+      }), [parkings]);
+
 
   const { clusters, supercluster } = useSupercluster({
     points,
@@ -136,7 +142,7 @@ const Map = () => {
         offsetTop={-10}
       >
         <FiberManualRecordIcon
-          style={{ color: '#38BAFF', cursor: 'pointer' }}
+          style={{ color: cluster.properties.taken ? "#f44336" : "#38BAFF", cursor: 'pointer' }}
           fontSize="small"
           onClick={() => setParkingClicked(cluster.properties.parking)}
         />
