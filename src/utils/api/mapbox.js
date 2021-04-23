@@ -39,7 +39,6 @@ const getDestinationCoor = async (dest) => {
   };
 };
 
-//need to finish refactoring hq and curloc
 const getAllRoutes = async (curloc, dest) => {
   const destCoor = await getDestinationCoor(dest);
 
@@ -75,8 +74,6 @@ const getAllRoutes = async (curloc, dest) => {
   return routeInfo;
 };
 
-//curloc: json object
-//dest: string
 const createRoutes = async (curloc, dest) => {
   const route = await getAllRoutes(curloc, dest);
 
