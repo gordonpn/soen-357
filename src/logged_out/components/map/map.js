@@ -66,17 +66,37 @@ const Map = () => {
   });
 
   const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
-  const points = parkings.map((parking) => ({
-    type: 'Feature',
-    properties: { cluster: false, parkingId: parking._id, parking: parking },
-    geometry: {
-      type: 'Point',
-      coordinates: [
-        parseFloat(parking.nPositionCentreLongitude),
-        parseFloat(parking.nPositionCentreLatitude),
-      ],
-    },
-  }));
+
+  useEffect(() => {
+    const timer = window.setInterval(() => {
+      setInitializeMap(true);
+    }, 60000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  const points = React.useMemo(
+    () =>
+      parkings.map((parking) => {
+        return {
+          type: 'Feature',
+          properties: {
+            cluster: false,
+            parkingId: parking._id,
+            parking: parking,
+          },
+          geometry: {
+            type: 'Point',
+            coordinates: [
+              parseFloat(parking.nPositionCentreLongitude),
+              parseFloat(parking.nPositionCentreLatitude),
+            ],
+          },
+        };
+      }),
+    [parkings]
+  );
 
   const { clusters, supercluster } = useSupercluster({
     points,
