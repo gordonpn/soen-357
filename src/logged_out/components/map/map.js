@@ -103,7 +103,26 @@ const Map = () => {
     points,
     bounds,
     zoom: viewport.zoom,
-    options: { radius: 50, maxZoom: 20, minPoints: 3 },
+    options: {
+      radius: 75,
+      maxZoom: 50,
+      minPoints: 5,
+      map: (props) => {
+        return {
+          ...props,
+          parkingCount: 1,
+          noParkingCount: 1,
+        };
+      },
+      reduce: (acc, props) => {
+        if (!props.taken) {
+          acc.parkingCount += props.parkingCount;
+        } else {
+          acc.noParkingCount += props.noParkingCount;
+        }
+        return acc;
+      },
+    },
   });
 
   const handleLocationInput = useDebouncedCallback((e) => {
@@ -123,8 +142,9 @@ const Map = () => {
   };
 
   const getClusters = clusters.map((cluster) => {
-    const { cluster: isCluster, point_count: pointCount } = cluster.properties;
-    if (isCluster) {
+    const { cluster: isCluster, parkingCount } = cluster.properties;
+    const pointCount = parkingCount;
+    if (isCluster && pointCount > 0) {
       const [longitude, latitude] = cluster.geometry.coordinates;
       return (
         <Marker
