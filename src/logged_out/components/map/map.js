@@ -3,11 +3,19 @@ import LocationOnIcon from '@material-ui/icons/LocationOn';
 import React, { useEffect, useRef, useState } from 'react';
 import AsyncSelect from 'react-select/async';
 import { useDebouncedCallback } from 'use-debounce';
-import { getSearchResults } from '../../../utils/api/mapbox.js';
-import ReactMapGL, { Marker, Popup, GeolocateControl, FlyToInterpolator } from 'react-map-gl';
+import { createRoutes, getSearchResults } from '../../../utils/api/mapbox.js';
+import ReactMapGL, {
+  Source,
+  Layer,
+  Marker,
+  Popup,
+  GeolocateControl,
+  FlyToInterpolator,
+} from 'react-map-gl';
 import useSupercluster from 'use-supercluster';
 import { getParkings } from '../../../utils/api/parking.js';
 import ParkingInfo from './ParkingInfo.js';
+import * as turf from '@turf/turf';
 
 const clusterStyle = {
   color: '#fff',
@@ -53,10 +61,12 @@ const Map = () => {
   const mapRef = useRef('');
 
   const [location, setLocation] = useState(null);
+  const [currlocation, setCurrLocation] = useState(null);
   const [parkings, setParkings] = useState([]);
   const [initializeMap, setInitializeMap] = useState(true);
   const [parkingClicked, setParkingClicked] = useState(null);
-
+  const [points, setPoints] = useState([]);
+  const [parkingRoute, setParkingRoute] = useState(null);
   const [viewport, setViewport] = useState({
     width: '100vw',
     height: '100vh',
@@ -66,37 +76,6 @@ const Map = () => {
   });
 
   const bounds = mapRef.current ? mapRef.current.getMap().getBounds().toArray().flat() : null;
-
-  useEffect(() => {
-    const timer = window.setInterval(() => {
-      setInitializeMap(true);
-    }, 60000);
-    return () => {
-      window.clearInterval(timer);
-    };
-  }, []);
-
-  const points = React.useMemo(
-    () =>
-      parkings.map((parking) => {
-        return {
-          type: 'Feature',
-          properties: {
-            cluster: false,
-            parkingId: parking._id,
-            parking: parking,
-          },
-          geometry: {
-            type: 'Point',
-            coordinates: [
-              parseFloat(parking.nPositionCentreLongitude),
-              parseFloat(parking.nPositionCentreLatitude),
-            ],
-          },
-        };
-      }),
-    [parkings]
-  );
 
   const { clusters, supercluster } = useSupercluster({
     points,
@@ -165,6 +144,15 @@ const Map = () => {
   });
 
   useEffect(() => {
+    const timer = window.setInterval(() => {
+      setInitializeMap(true);
+    }, 60000);
+    return () => {
+      window.clearInterval(timer);
+    };
+  }, []);
+
+  useEffect(() => {
     const getStreetParkings = async () => {
       setParkings(await getParkings());
     };
@@ -173,6 +161,32 @@ const Map = () => {
       setInitializeMap(false);
     }
   }, [initializeMap]);
+
+  useEffect(() => {
+    if (parkings.length) {
+      const geojsonPoints = parkings.map((parking) =>
+        turf.point([parking.nPositionCentreLongitude, parking.nPositionCentreLatitude], {
+          cluster: false,
+          parkingId: parking._id,
+          parking: parking,
+        })
+      );
+      setPoints(geojsonPoints);
+    }
+  }, [parkings]);
+
+  useEffect(() => {
+    const createRoute = async () => {
+      const pointCollection = turf.featureCollection(points);
+      const currentLoc = turf.point([currlocation.longitude, currlocation.latitude]);
+      const nearestParking = turf.nearestPoint(currentLoc, pointCollection).geometry.coordinates;
+      const route = await createRoutes(currentLoc.geometry.coordinates, nearestParking);
+      setParkingRoute(route);
+    };
+    if (points.length && currlocation) {
+      createRoute();
+    }
+  }, [points, currlocation]);
 
   return (
     <div>
@@ -183,6 +197,7 @@ const Map = () => {
         onInputChange={(e) => handleLocationInput(e)}
         onChange={handleLocationSelect}
         isClearable={true}
+        placeholder="Search location"
       />
 
       <ReactMapGL
@@ -214,11 +229,17 @@ const Map = () => {
             <ParkingInfo info={parkingClicked} />
           </Popup>
         )}
+        {parkingRoute && (
+          <Source type="geojson" data={parkingRoute.route}>
+            <Layer {...parkingRoute.routeStyle} />
+          </Source>
+        )}
         <GeolocateControl
           style={geolocateControlStyle}
           positionOptions={{ enableHighAccuracy: true }}
           trackUserLocation={true}
           auto
+          onGeolocate={(e) => setCurrLocation(e.coords)}
         />
       </ReactMapGL>
     </div>
