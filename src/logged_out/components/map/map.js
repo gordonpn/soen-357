@@ -142,8 +142,8 @@ const Map = () => {
   };
 
   const getClusters = clusters.map((cluster) => {
-    const { cluster: isCluster, parkingCount } = cluster.properties;
-    const pointCount = parkingCount;
+    const { cluster: isCluster, parkingCount: pointCount } = cluster.properties;
+    // parkingCount and noParkingCount are wrong most of the time, theyre almost accurate though lol
     if (isCluster && pointCount > 0) {
       const [longitude, latitude] = cluster.geometry.coordinates;
       return (
