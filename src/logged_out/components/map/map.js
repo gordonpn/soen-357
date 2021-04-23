@@ -154,7 +154,7 @@ const Map = () => {
   }, [initializeMap]);
 
   useEffect(() => {
-    const createRoute = async () => {
+    if (parkings.length) {
       const geojsonPoints = parkings.map((parking) =>
         turf.point([parking.nPositionCentreLongitude, parking.nPositionCentreLatitude], {
           cluster: false,
@@ -163,16 +163,21 @@ const Map = () => {
         })
       );
       setPoints(geojsonPoints);
-      const pointCollection = turf.featureCollection(geojsonPoints);
+    }
+  }, [parkings]);
+
+  useEffect(() => {
+    const createRoute = async () => {
+      const pointCollection = turf.featureCollection(points);
       const currentLoc = turf.point([currlocation.longitude, currlocation.latitude]);
       const nearestParking = turf.nearestPoint(currentLoc, pointCollection).geometry.coordinates;
       const route = await createRoutes(currentLoc.geometry.coordinates, nearestParking);
       setParkingRoute(route);
     };
-    if (parkings.length && currlocation) {
+    if (points.length && currlocation) {
       createRoute();
     }
-  }, [parkings, currlocation]);
+  }, [points, currlocation]);
 
   return (
     <div>
