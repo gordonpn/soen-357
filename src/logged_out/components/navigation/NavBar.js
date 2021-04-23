@@ -7,8 +7,8 @@ import {
   Typography,
   withStyles,
 } from '@material-ui/core';
-import BookIcon from '@material-ui/icons/Book';
 import HomeIcon from '@material-ui/icons/Home';
+import MapRoundedIcon from '@material-ui/icons/MapRounded';
 import MenuIcon from '@material-ui/icons/Menu';
 import PropTypes from 'prop-types';
 import React, { memo } from 'react';
@@ -52,9 +52,9 @@ function NavBar(props) {
       icon: <HomeIcon className="text-white" />,
     },
     {
-      link: '/blog',
+      link: '/map',
       name: 'Map',
-      icon: <BookIcon className="text-white" />,
+      icon: <MapRoundedIcon className="text-white" />,
     },
   ];
   return (

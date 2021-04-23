@@ -97,6 +97,9 @@ const styles = (theme) => ({
   waveBorder: {
     paddingTop: theme.spacing(4),
   },
+  noDecoration: {
+    textDecoration: 'none !important',
+  },
 });
 
 function HeadSection(props) {
@@ -132,16 +135,15 @@ function HeadSection(props) {
                             effortlessly. Type in the address, select, and go!
                           </Typography>
                         </Box>
-                        <Link to={'/blog'} className={classes.noDecoration}>
+                        <Link to={'/map'} className={classes.noDecoration}>
                           <Button
                             variant="contained"
                             color="secondary"
                             fullWidth
                             className={classes.extraLargeButton}
                             classes={{ label: classes.extraLargeButtonLabel }}
-                            href="https://github.com/gordonpn/soen-357"
                           >
-                            Find me parking!
+                            Find parking!
                           </Button>
                         </Link>
                       </div>
